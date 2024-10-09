@@ -15,6 +15,15 @@ def load_pickle(save_path: PosixPath):
 
 
 def load_GHL_data(data_dir, saved=True, relabeled=True):
+    """
+    Loading the GHL dataset. Notice that if 'saved' is set to False one needs to first download the GHL dataset from
+    "https://kas.pr/ics-research/dataset_ghl_1" and unzip the files into the GHL folder.
+
+    :param data_dir: Path to the GHL folder
+    :param saved: Boolean stating if the saved version should be used.
+    :param relabeled: Boolean stating if the relabeled version should be used.
+    :return: The time series, labels, and time points all given as torch.Tensor
+    """
     if saved:
         if relabeled:
             X, L, T = torch.load(data_dir.joinpath('relabeled_loaded_data.pt'))
