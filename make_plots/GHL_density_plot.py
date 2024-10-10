@@ -17,29 +17,19 @@ WINDOW_SIZE = 2400
 EMB_DIM = 30
 iteration = 0
 
-mpl.rc('font', family="Times Ten")  # Ten")
+mpl.rc('font', family="Times New Roman")  # Ten")
 plt.rcParams['font.size'] = 15
 plt.rcParams['mathtext.fontset'] = 'cm'
 figwidth = 5.765
 
-save_folder = cfg.dir.data.joinpath(f'video_experiment_1perc/rep2/iteration_{iteration}')
+model_folder = cfg.dir.results.joinpath(f'density_example')
 X, L, _ = load_GHL_data(cfg.dir.data.joinpath('GHL'), saved=True, relabeled=True)
 dataset = GHL_new(X, L, window_size=WINDOW_SIZE, stride_size=WINDOW_SIZE // 5, obs_weights=None)
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=256, shuffle=False)
 
-# %% Plot just to see
-plot_idx = -17
-fig, ax = plt.subplots(2, 2, figsize=(15, 10))
-ax = ax.reshape(-1)
-for i in range(3):
-    ax[i].plot(X[plot_idx][:, i])
-
-ax[3].plot(L[plot_idx])
-fig.show()
-
-# %%
-plotting_stride = 100
-plotting_I = -17
+# %% Plotting the TS including the estimated p-values for each window.
+plotting_stride = 100  # Stride size to use for the sliding window approach
+plotting_I = -17  # Which modem to use for the example
 
 plotting_data = GHL_new([X[plotting_I]], [L[plotting_I]], window_size=WINDOW_SIZE, stride_size=plotting_stride, means=dataset.means,
                         stds=dataset.stds)
@@ -47,12 +37,12 @@ plot_loader = torch.utils.data.DataLoader(plotting_data, batch_size=128, shuffle
 
 autoencoder_model = autoencoder = auto_encoder(5, kernel_size=5, channels=256, emb_dim=EMB_DIM,
                                                window_size=WINDOW_SIZE, variational=False)
-autoencoder_model.load_state_dict(torch.load(save_folder.parent.joinpath('AE_model.pt'), map_location='cpu'))
+autoencoder_model.load_state_dict(torch.load(model_folder.joinpath('AE_model.pt'), map_location='cpu'))
 autoencoder_model.eval()
 
 normalizing_flow = MAF(n_blocks=32, input_size=EMB_DIM, hidden_size=256, n_hidden=1, cond_label_size=None,
                        batch_norm=False, activation='tanh')
-normalizing_flow.load_state_dict(torch.load(save_folder.joinpath('nf_model.pt'), map_location='cpu'))
+normalizing_flow.load_state_dict(torch.load(model_folder.joinpath('nf_model.pt'), map_location='cpu'))
 normalizing_flow.eval()
 
 Z = []
@@ -62,7 +52,8 @@ with torch.no_grad():
         Z.append(normalizing_flow.log_prob(enc))
 Z = torch.concatenate(Z)
 
-# %% Estimating the density-CDF
+# %% Estimating the density-CDF to obtain the p-value predictor. Notice that number of samples should be chosen large
+# for accurate representation.
 sampled_densities = []
 with torch.no_grad():
     for i in tqdm(range(200)):
