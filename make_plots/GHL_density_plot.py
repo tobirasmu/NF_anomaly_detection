@@ -85,7 +85,7 @@ for i in range(3):
 axes[-1].fill_between(np.arange(120000), np.zeros(120000), L[plotting_I][:120000].numpy(), label='Labeled anom.', color='C1')
 axes[-1].set_ylabel(variable_names[-1])
 axes[-1].plot(interpolator(color_data)[:120000], label='Mean p-value', color='C2')
-axes[-1].plot([0, 120000], [0.01, 0.01], color='red', linestyle='dashed', label='1% Threshold')
+axes[-1].plot([0, 120000], [0.01, 0.01], color='red', linestyle='dashed', label='1% threshold')
 axes[-1].set_yscale('log')
 axes[-1].set_xlabel('Time')
 axes[-1].legend(loc='lower right')
