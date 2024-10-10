@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 results/running_results
 results/density_example
+make_plots/*.pkl
 
 data/GHL
 

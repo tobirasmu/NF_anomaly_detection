@@ -203,6 +203,8 @@ for rep in range(5):
         if rep == 1:
             torch.save(z_embeddings, iteration_savefolder.joinpath('z-vals.pt'))
             torch.save(all_logLiks, iteration_savefolder.joinpath('log-likelihoods.pkl'))
+            if iteration == 80:
+                torch.save(normalizing_flow.state_dict(), cfg.dir.results.joinpath('running_results/nf_model_iteration_80.pt'))
 
         # %% Model evaluation and subsequent updating of weights
         # Training the interpolator

@@ -15,7 +15,6 @@ cfg = config.Config()
 
 WINDOW_SIZE = 2400
 EMB_DIM = 30
-iteration = 0
 
 mpl.rc('font', family="Times New Roman")  # Ten")
 plt.rcParams['font.size'] = 15
