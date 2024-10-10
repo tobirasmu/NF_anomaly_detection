@@ -1,7 +1,6 @@
-import csv
 import pandas as pd
 from tqdm import tqdm
-from pathlib import PosixPath, Path
+from pathlib import Path, PosixPath
 import torch
 import pickle
 import warnings
@@ -57,38 +56,3 @@ def load_GHL_data(data_dir, saved=True, relabeled=True):
 
         torch.save((X, L, T), data_dir.joinpath('loaded_data.pt'))
     return X, L, T
-
-
-def load_SWaT_data(data_dir, saved=True, remove_warmup=False):
-    """
-    According to the authors of the dataset there is warm-up period of around six hours
-    """
-    if saved:
-        X, L, T, var_names = torch.load(data_dir.joinpath('loaded_data.pt'))
-    else:
-        # The 'normal' data without any attack
-        x_normal = pd.read_excel(data_dir.joinpath('SWaT_Dataset_Normal_v1.xlsx'), header=1)
-        t_normal = pd.to_datetime(x_normal[' Timestamp'], format=' %d/%m/%Y %I:%M:%S %p').values
-        x_normal = x_normal.iloc[:, 1:(-1)]
-        var_names = x_normal.keys()
-        x_normal = torch.Tensor(x_normal.values)
-
-        # The 'abnormal' data with attacks
-        x_abnormal = pd.read_excel(data_dir.joinpath('SWaT_Dataset_Attack_v0.xlsx'), header=1)
-        t_abnormal = pd.to_datetime(x_abnormal[' Timestamp'], format=' %d/%m/%Y %I:%M:%S %p').values
-        L_abnormal = torch.Tensor((x_abnormal['Normal/Attack'] != 'Normal').values * 1.0)
-        x_abnormal = x_abnormal.iloc[:, 1:(-1)].values
-        x_abnormal = torch.Tensor(x_abnormal)
-
-        # Making one list for both
-        X = [x_normal, x_abnormal]
-        L = [torch.zeros((x_normal.shape[0])), L_abnormal]
-        T = [t_normal, t_abnormal]
-
-        torch.save((X, L, T, var_names), data_dir.joinpath('loaded_data.pt'))
-    if remove_warmup:
-        six_hours = 6 * 60 * 60
-        X[0] = X[0][six_hours:]
-        L[0] = L[0][six_hours:]
-        T[0] = T[0][six_hours:]
-    return X, L, T, var_names

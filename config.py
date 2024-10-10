@@ -25,3 +25,4 @@ class Dir:
 
         self.data = self.root.joinpath('data')
         self.plots = self.root.joinpath('plots')
+        self.results = self.root.joinpath('results')
