@@ -7,7 +7,6 @@ import torch.nn as nn
 import torch
 import csv
 from tqdm import tqdm
-import matplotlib.pyplot as plt
 import pandas as pd
 import argparse
 from scipy.interpolate import interp1d
@@ -72,7 +71,7 @@ for rep in range(5):
 
     # %% Define and train the autoencoder
     print(f"{f' REPETITION {rep} ':-^100s}")
-    print(f"{' Training the autoencoder part ':-^100s}")
+    print(f"{' Training the autoencoder part ': -^100s}")
 
     autoencoder = auto_encoder(5, kernel_size=5, channels=256, emb_dim=EMB_DIM,
                                window_size=WINDOW_SIZE, variational=False).to(device)
