@@ -12,7 +12,7 @@ import numpy as np
 
 from models.NF import MAF
 from tools.reader import load_GHL_data
-from tools.dataset import GHL_new
+from tools.dataset import GHL
 import config
 
 cfg = config.Config()
@@ -32,7 +32,7 @@ figwidth = 5.765
 
 # %% GHL - Loading model, data, and embeddings
 X, L, _ = load_GHL_data(cfg.dir.data.joinpath('GHL'), saved=True, relabeled=True)
-dataset = GHL_new(X, L, window_size=WINDOW_SIZE, stride_size=WINDOW_SIZE // 5, obs_weights=None)
+dataset = GHL(X, L, window_size=WINDOW_SIZE, stride_size=WINDOW_SIZE // 5, obs_weights=None)
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=256, shuffle=False)
 
 save_folder = cfg.dir.results.joinpath('running_results')

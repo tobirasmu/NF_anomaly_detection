@@ -12,7 +12,7 @@ import argparse
 from scipy.interpolate import interp1d
 from sklearn.metrics import precision_recall_curve, roc_auc_score, auc
 
-from tools.dataset import  GHL_new, NF_NEW
+from tools.dataset import GHL, GHL_NF
 from tools.reader import load_GHL_data
 from models.AE import auto_encoder
 from models.NF import MAF
@@ -64,8 +64,8 @@ for rep in range(5):
     torch.manual_seed(rep * 42)
 
     # Defining the autoencoder training set
-    dataset = GHL_new(X, L, window_size=WINDOW_SIZE, stride_size=WINDOW_SIZE // 5,
-                      obs_weights=None)  # First iteration and here we only iterate wrt. the NF
+    dataset = GHL(X, L, window_size=WINDOW_SIZE, stride_size=WINDOW_SIZE // 5,
+                  obs_weights=None)  # First iteration and here we only iterate wrt. the NF
     # Assembling in one big dataset
     train_loader = torch.utils.data.DataLoader(dataset, batch_size=256, shuffle=True)
 
@@ -141,9 +141,9 @@ for rep in range(5):
             iteration_savefolder = savefolder.joinpath(f'iteration_{iteration}')
             os.makedirs(iteration_savefolder, exist_ok=True)
         # Making NF train loaders
-        nf_train_loader = torch.utils.data.DataLoader(NF_NEW(encoded_data, Ls, MSE, observation_weights), batch_size=128,
+        nf_train_loader = torch.utils.data.DataLoader(GHL_NF(encoded_data, Ls, MSE, observation_weights), batch_size=128,
                                                       shuffle=True)
-        nf_eval_loader = torch.utils.data.DataLoader(NF_NEW(encoded_data, Ls, MSE, observation_weights), batch_size=128,
+        nf_eval_loader = torch.utils.data.DataLoader(GHL_NF(encoded_data, Ls, MSE, observation_weights), batch_size=128,
                                                      shuffle=False)
 
         print(f"{'':-^100s}")

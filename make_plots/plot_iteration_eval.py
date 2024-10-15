@@ -9,7 +9,7 @@ from matplotlib.patches import  Rectangle
 from matplotlib.lines import Line2D
 
 import config
-from tools.dataset import GHL_new
+from tools.dataset import GHL
 from tools.reader import load_GHL_data
 
 cfg = config.Config()
@@ -35,8 +35,8 @@ roc_results = results[results.curve == 'roc']
 
 # Get the labels of the observations
 X, L, _ = load_GHL_data(cfg.dir.data.joinpath('GHL'), saved=True, relabeled=True)
-dataset = GHL_new(X, L, window_size=WINDOW_SIZE, stride_size=WINDOW_SIZE // 5,
-                  obs_weights=None)
+dataset = GHL(X, L, window_size=WINDOW_SIZE, stride_size=WINDOW_SIZE // 5,
+              obs_weights=None)
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=256, shuffle=False)
 labels = []
 with torch.no_grad():

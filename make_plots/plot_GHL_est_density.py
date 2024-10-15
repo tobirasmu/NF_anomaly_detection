@@ -5,7 +5,7 @@ from matplotlib.colors import Normalize
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
 
-from tools.dataset import GHL_new
+from tools.dataset import GHL
 from models.AE import auto_encoder
 from tools.reader import load_GHL_data
 from models.NF import MAF
@@ -23,15 +23,15 @@ figwidth = 5.765
 
 model_folder = cfg.dir.results.joinpath(f'density_example')
 X, L, _ = load_GHL_data(cfg.dir.data.joinpath('GHL'), saved=True, relabeled=True)
-dataset = GHL_new(X, L, window_size=WINDOW_SIZE, stride_size=WINDOW_SIZE // 5, obs_weights=None)
+dataset = GHL(X, L, window_size=WINDOW_SIZE, stride_size=WINDOW_SIZE // 5, obs_weights=None)
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=256, shuffle=False)
 
 # %% Plotting the TS including the estimated p-values for each window.
 plotting_stride = 100  # Stride size to use for the sliding window approach
 plotting_I = -17  # Which modem to use for the example
 
-plotting_data = GHL_new([X[plotting_I]], [L[plotting_I]], window_size=WINDOW_SIZE, stride_size=plotting_stride, means=dataset.means,
-                        stds=dataset.stds)
+plotting_data = GHL([X[plotting_I]], [L[plotting_I]], window_size=WINDOW_SIZE, stride_size=plotting_stride, means=dataset.means,
+                    stds=dataset.stds)
 plot_loader = torch.utils.data.DataLoader(plotting_data, batch_size=128, shuffle=False)
 
 autoencoder_model = autoencoder = auto_encoder(5, kernel_size=5, channels=256, emb_dim=EMB_DIM,
