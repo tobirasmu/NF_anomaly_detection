@@ -276,6 +276,9 @@ for rep in range(5):
             prec, rec, th = precision_recall_curve(df.abnormal, variable)
             roc_score.append(roc_auc_score(df.abnormal, variable))
             pr_score.append(auc(rec, prec))
+            if iteration == 0:
+                savename = resultsdir.joinpath(f'curves_repetition_{rep}.csv')
+                df.to_csv(savename)
 
         with open(resultsfile, 'a') as file:
             csv.writer(file).writerow([rep,
