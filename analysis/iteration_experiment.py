@@ -18,8 +18,8 @@ from models.AE import auto_encoder
 from models.NF import MAF
 import config
 
-torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
+torch.backends.cudnn.deterministic = True
 
 cfg = config.Config()
 
@@ -70,8 +70,8 @@ for rep in range(5):
     train_loader = torch.utils.data.DataLoader(dataset, batch_size=256, shuffle=True)
 
     # %% Define and train the autoencoder
-    print(f"{f' REPETITION {rep} ': -^100s}")
-    print(f"{' Training the autoencoder part ': -^100s}")
+    print(f"{f' REPETITION {rep} ':-^100s}")
+    print(f"{' Training the autoencoder part ':-^100s}")
 
     autoencoder = auto_encoder(5, kernel_size=5, channels=256, emb_dim=EMB_DIM,
                                window_size=WINDOW_SIZE, variational=False).to(device)
