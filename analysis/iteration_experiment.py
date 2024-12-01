@@ -50,14 +50,14 @@ X, L, _ = load_GHL_data(cfg.dir.data.joinpath('GHL'), saved=True, relabeled=True
 # Resultsfile
 resultsdir = cfg.dir.results
 os.makedirs(resultsdir, exist_ok=True)
-resultsfile = resultsdir.joinpath('results_multirep.csv')
+resultsfile = resultsdir.joinpath('results_multirep2.csv')
 if not os.path.exists(resultsfile):
     with open(resultsfile, 'w') as file:
         csv.writer(file).writerow(['rep', 'iteration', 'curve', 'MSE', 'Log-likelihood',
                                    'LL-MSEs', 'z-mahal', 'Mahalanobis', 'all'])
         file.close()
 
-for rep in range(5):
+for rep in range(6):
     if rep == 1:
         savefolder = resultsdir.joinpath(f'running_results')
         os.makedirs(savefolder, exist_ok=True)
@@ -277,7 +277,8 @@ for rep in range(5):
             roc_score.append(roc_auc_score(df.abnormal, variable))
             pr_score.append(auc(rec, prec))
             if iteration == 0:
-                savename = resultsdir.joinpath(f'curves_repetition_{rep}.csv')
+                curve_dir = resultsdir.joinpath('curves')
+                savename = curve_dir.joinpath(f'repetition_{rep}.csv')
                 df.to_csv(savename)
 
         with open(resultsfile, 'a') as file:
